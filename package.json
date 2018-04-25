@@ -1,0 +1,30 @@
+{
+  "name": "vt-magic",
+  "version": "1.0.0",
+  "description": "A command line tool for reading vector tiles.",
+  "main": "index.js",
+  "dependencies": {
+    "@mapbox/vector-tile": "^1.3.1",
+    "@mapbox/vt2geojson": "^1.1.5",
+    "pbf": "^3.1.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/samfader/vt-magic.git"
+  },
+  "keywords": [
+    "mapbox",
+    "vector",
+    "maps",
+    "gis"
+  ],
+  "author": "Sam Fader",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/samfader/vt-magic/issues"
+  },
+  "homepage": "https://github.com/samfader/vt-magic#readme"
+}
