@@ -3,25 +3,49 @@ var VectorTileFeature = require('@mapbox/vector-tile').VectorTileFeature;
 var Protobuf = require('pbf');
 var fs = require('fs');
 var vt2geojson = require('@mapbox/vt2geojson');
+var figlet = require('figlet');
+var chalk = require('chalk');
+var inquirer = require('inquirer');
+
+console.log(
+  chalk.red(
+    figlet.textSync('Vector Tile Magic', {horizontalLayout: 'full'})
+  )
+);
 
 var tile = new VectorTile(new Protobuf(fs.readFileSync('test.mvt')));
 
-// if user wants to convert to geojson, run this - layer name, z,x,y would need to be
-// input from user as well
-// vt2geojson({
-//     uri: 'test.mvt',
-//     layer: 'place_label',
-//     z: 9,
-//     x: 20,
-//     y: 40
-// }, function (err, result) {
-//     if (err) throw err;
-//     console.log("result is " + result); // => GeoJSON FeatureCollection
-//     fs.writeFile("result.geojson", result, function(err) {
-//     if(err) {
-//         return console.log(err);
-//     }
-//
-//     console.log("The file was saved!");
-// });
-// });
+console.log("Hi there - welcome to vt-magic! Let's inspect some vector tiles, shall we? \n");
+console.log("Layers available are: \n")
+console.log(listLayers(tile) + "\n");
+
+// take input from user
+var questions = [
+  {
+    type: 'input',
+    name: 'layer',
+    message: "What layer do you want to access"
+  }
+];
+
+inquirer.prompt(questions).then(answers => {
+  // call layerPicker function with user input
+  layerPicker(answers.layer);
+});
+
+function layerPicker (layer_name){
+  // read the tile info
+  console.log("line 39");
+  console.log("line 40" + tile.layers.layer_name);
+  console.log("are we working? " + layer_name);
+};
+
+function listLayers (vt) {
+  var i;
+  var layer_names = Object.keys(vt.layers);
+    for (i=0; i < layer_names.length; i++) {
+      if (typeof layer_names[i] !== "undefined"){
+        console.log(layer_names[i]);
+    }
+  }
+};
