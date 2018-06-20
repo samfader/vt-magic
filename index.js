@@ -2,10 +2,10 @@ var VectorTile = require('@mapbox/vector-tile').VectorTile;
 var VectorTileFeature = require('@mapbox/vector-tile').VectorTileFeature;
 var Protobuf = require('pbf');
 var fs = require('fs');
-var vt2geojson = require('@mapbox/vt2geojson');
 var figlet = require('figlet');
 var chalk = require('chalk');
-var inquirer = require('inquirer');
+const util = require('util')
+const prompts = require('prompts');
 
 console.log(
   chalk.red(
@@ -13,31 +13,36 @@ console.log(
   )
 );
 
-var tile = new VectorTile(new Protobuf(fs.readFileSync('test.mvt')));
-
-console.log("Hi there - welcome to vt-magic! Let's inspect some vector tiles, shall we? \n");
-console.log("Layers available are: \n")
-console.log(listLayers(tile) + "\n");
-
 // take input from user
-var questions = [
-  {
-    type: 'input',
-    name: 'layer',
-    message: "What layer do you want to access"
-  }
-];
+(async function(){
+  // TO DO: take file input from user
+  var tile = new VectorTile(new Protobuf(fs.readFileSync('test.mvt')));
 
-inquirer.prompt(questions).then(answers => {
-  // call layerPicker function with user input
-  layerPicker(answers.layer);
-});
+  console.log("Hi there - welcome to vt-magic! Let's inspect some vector tiles, shall we? \n");
+  console.log("Layers available are: \n")
+  // TO DO: fix the "undefined" layer showing up
+  // list the layers available in the tile
+  console.log(listLayers(tile) + "\n");
 
-function layerPicker (layer_name){
+    const questions = [
+        {
+            type: 'text',
+            name: 'layer',
+            message: 'What layer do you want to access?',
+        }
+    ];
+
+    const answer = await prompts(questions);
+    layerPicker(tile, answer.layer);
+})();
+
+function layerPicker (vt, layer_name){
   // read the tile info
-  console.log("line 39");
-  console.log("line 40" + tile.layers.layer_name);
-  console.log("are we working? " + layer_name);
+  // TO DO: print out which fields are available in the layer (Mapbox calls them source-layers, in spec they are layers)
+  // TO DO: spit out the geometry as geojson - have to know the x,y,z.
+  layer_inspector = vt.layers[layer_name]
+  console.log("\nThis layer's source layers are: " + layer_inspector._keys + "\n\nSee the full details below:\n");
+  console.log(util.inspect(layer_inspector, false, null));
 };
 
 function listLayers (vt) {
